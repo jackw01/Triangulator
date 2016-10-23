@@ -390,7 +390,7 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 
 .select-container select {
     background: transparent;
-    padding: 3px;
+    padding: 5px;
     border: none;
     outline: none;
     display: inline-block;
@@ -400,11 +400,12 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
     margin-top: -1px;
     font-size: 0.93em;
     font-weight: 300;
+    height: 28px;
 }
 
 .select-container {
-    padding: 0px 8px;
-    height: 26px;
+    padding: 0px 6px;
+    height: 28px;
     overflow: hidden;
     display: inline-block;
     position: relative;
