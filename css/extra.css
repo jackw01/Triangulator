@@ -1,0 +1,125 @@
+body {
+    overflow: hidden;
+    position: fixed;
+}
+
+.label {
+    font-weight: 300;
+}
+
+.controls-container {
+    position: fixed;
+    padding: 0.1em 0.6em 1em 1.3em;
+    top: 0px;
+    right: 0px;
+    color: #ffffff;
+    max-height: 100%;
+    background: #2a2c2d;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 0px 0px 0px 5px;
+    -moz-border-radius: 0px 0px 0px 5px;
+    -webkit-border-radius: 0px 0px 0px 5px;
+    overflow-y: auto !important;
+}
+
+.slider-hue {
+    background: -moz-linear-gradient(left, rgba(241,95,95,1) 0%, rgba(168,241,95,1) 25%, rgba(95,241,241,1) 50%, rgba(168,95,241,1) 75%, rgba(241,95,98,1) 100%) !important;
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(241,95,95,1)), color-stop(25%, rgba(168,241,95,1)), color-stop(50%, rgba(95,241,241,1)), color-stop(75%, rgba(168,95,241,1)), color-stop(100%, rgba(241,95,98,1))) !important;
+    background: -webkit-linear-gradient(left, rgba(241,95,95,1) 0%, rgba(168,241,95,1) 25%, rgba(95,241,241,1) 50%, rgba(168,95,241,1) 75%, rgba(241,95,98,1) 100%) !important;
+    background: -o-linear-gradient(left, rgba(241,95,95,1) 0%, rgba(168,241,95,1) 25%, rgba(95,241,241,1) 50%, rgba(168,95,241,1) 75%, rgba(241,95,98,1) 100%) !important;
+    background: -ms-linear-gradient(left, rgba(241,95,95,1) 0%, rgba(168,241,95,1) 25%, rgba(95,241,241,1) 50%, rgba(168,95,241,1) 75%, rgba(241,95,98,1) 100%) !important;
+    background: linear-gradient(to right, rgba(241,95,95,1) 0%, rgba(168,241,95,1) 25%, rgba(95,241,241,1) 50%, rgba(168,95,241,1) 75%, rgba(241,95,98,1) 100%) !important;
+}
+
+.slider-lightness {
+    background: -moz-linear-gradient(left, rgba(0,0,0,1) 0%, rgba(214,73,73,1) 47%, rgba(255,255,255,1) 100%) !important;
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(0,0,0,1)), color-stop(47%, rgba(214,73,73,1)), color-stop(100%, rgba(255,255,255,1))) !important;
+    background: -webkit-linear-gradient(left, rgba(0,0,0,1) 0%, rgba(214,73,73,1) 47%, rgba(255,255,255,1) 100%) !important;
+    background: -o-linear-gradient(left, rgba(0,0,0,1) 0%, rgba(214,73,73,1) 47%, rgba(255,255,255,1) 100%) !important;
+    background: -ms-linear-gradient(left, rgba(0,0,0,1) 0%, rgba(214,73,73,1) 47%, rgba(255,255,255,1) 100%) !important;
+    background: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(214,73,73,1) 47%, rgba(255,255,255,1) 100%) !important;
+}
+
+.slider-saturation {
+    background: -moz-linear-gradient(left, rgba(128,128,128,1) 0%, rgba(213,72,72,1) 100%) !important;
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(128,128,128,1)), color-stop(100%, rgba(213,72,72,1))) !important;
+    background: -webkit-linear-gradient(left, rgba(128,128,128,1) 0%, rgba(213,72,72,1) 100%) !important;
+    background: -o-linear-gradient(left, rgba(128,128,128,1) 0%, rgba(213,72,72,1) 100%) !important;
+    background: -ms-linear-gradient(left, rgba(128,128,128,1) 0%, rgba(213,72,72,1) 100%) !important;
+    background: linear-gradient(to right, rgba(128,128,128,1) 0%, rgba(213,72,72,1) 100%) !important;
+}
+
+.canvas-container {
+    margin: 0;
+    height: 100%;
+}
+
+.infotext {
+    font-weight: 300;
+    font-size: 0.9em;
+    position: fixed;
+    padding: 5px;
+    bottom: 0px;
+    right: 0px;
+    -webkit-transition: all 200ms ease 10ms;
+    -moz-transition: all 200ms ease 10ms;
+    -o-transition: all 200ms ease 10ms;
+    transition: all 200ms ease 10ms;
+    color: rgba(255, 255, 255, 0.5);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    text-align: right;
+}
+
+#canvas {
+    height: 100%;
+}
+
+.input-table {
+    margin-top: 5px;
+}
+
+.input-table td {
+    padding-top: 0.3em;
+    padding-right: 1em;
+}
+
+@media only screen and (min-width: 640px) {
+
+    .modal {
+        width: 34em !important;
+        top: 25% !important;
+    }
+}
+
+@media only screen and (max-height: 34em) and (max-width: 34em) {
+
+    .controls-container {
+        width: 100%;
+        height: 100%;
+        border-radius: 0px 0px 0px 0px;
+        -moz-border-radius: 0px 0px 0px 0px;
+        -webkit-border-radius: 0px 0px 0px 0px;
+        background: rgba(0, 0, 0, 0);
+    }
+
+    .controls-container .label {
+        text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.75);
+    }
+
+    .controls-container .select-container, .controls-container a.button {
+        color: #383838;
+        background: #cccccc;
+    }
+
+    .controls-container input[type="range"] {
+        background: #a8a8a8;
+    }
+
+    .controls-container input[type="range"]::-webkit-slider-thumb {
+        background: #cccccc;
+    }
+}
