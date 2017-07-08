@@ -1,6 +1,6 @@
 /*
 Triangulator
-Copyright (C) 2015-2016 jackw01
+Copyright (C) 2015-2017 jackw01
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// Performs a Delaunay triangulation on a set of points
 // Following code is in the public domain
 
 var EPSILON = 1.0 / 1048576.0;
@@ -60,7 +61,7 @@ function circumcircle(vertices, i, j, k) {
 
     /* Check for coincident points */
     if(fabsy1y2 < EPSILON && fabsy2y3 < EPSILON)
-        throw new Error("Eek! Coincident points!");
+        throw new Error("Coincident points");
 
     if(fabsy1y2 < EPSILON) {
         m2  = -((x3 - x2) / (y3 - y2));
@@ -213,25 +214,6 @@ function triangulate(vertices, key) {
 
     /* Yay, we're done! */
     return open;
-}
-
-function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex ;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
 }
 
 // End public domain code
@@ -474,36 +456,6 @@ $("#select-colors").on("change", function() {
     updateControls();
 
     draw(c);
-});
-
-$("#randomize-button").click(function(){
-
-    colors = [];
-
-    var hue1 = getRandomInt(0, 360);
-    var hue2 = (hue1 + getRandomInt(50, 260)) % 360;
-    var saturation1 = 0.8;
-    var saturation2 = 0.8;
-    var lightness1 = 0.5;
-    var lightness2 = 0.5;
-
-    var colorCombination = getRandomInt(0, 1);
-
-    if (colorCombination === 0) {
-
-        saturation2 = 0.2;
-        lightness2 = 0.2;
-
-    } else if (colorCombination == 1) {
-
-        lightness2 = 0.2;
-    }
-
-    colors.push(chroma.hsl(hue1, saturation1, lightness1).hsl());
-    colors.push(chroma.hsl(hue2, saturation2, lightness2).hsl());
-
-    drawImage(c);
-    updateControls();
 });
 
 function updateControls() {

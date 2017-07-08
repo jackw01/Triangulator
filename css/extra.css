@@ -14,7 +14,7 @@ body {
     right: 0px;
     color: #ffffff;
     max-height: 100%;
-    background: #2a2c2d;
+    background: #272b34;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -95,7 +95,7 @@ body {
     }
 }
 
-@media only screen and (max-height: 34em) and (max-width: 34em) {
+@media only screen and (max-width: 65em) {
 
     .controls-container {
         width: 100%;
