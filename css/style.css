@@ -285,6 +285,15 @@ a.button-rect {
     -webkit-border-radius: 5px 5px 5px 5px;
 }
 
+a.button-rect-small {
+    padding: 4px;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 5px 5px 5px 5px;
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+}
+
 a.button-circle-large {
     width: 64px;
     height: 64px;
@@ -470,6 +479,10 @@ textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[ty
 	-webkit-box-shadow: 0 1px 4px rgba(0,0,0,.33), inset 0 1px 1px rgba(255,255,255,.11);
 	-moz-box-shadow: 0 1px 4px rgba(0,0,0,.33), inset 0 1px 1px rgba(255,255,255,.11);
 	box-shadow: 0 1px 4px rgba(0,0,0,.33), inset 0 1px 1px rgba(255,255,255,.11);
+}
+
+option {
+    color: black;
 }
 
 .select-container::after {

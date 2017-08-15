@@ -218,65 +218,6 @@ function triangulate(vertices, key) {
 
 // End public domain code
 
-// Port of Ken Perlin's code
-
-var PerlinNoise = {};
-
-PerlinNoise.randomInts = [];
-
-for (var i = 0; i < 256; i++) {
-
-    PerlinNoise.randomInts.push(getRandomInt(0, 256));
-}
-
-PerlinNoise.noise = function(x, y, z) {
-
-    function fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
-
-    function lerp(t, a, b) { return a + t * (b - a); }
-
-    function grad(hash, x, y, z) {
-        var h = hash & 15;
-        var u = h < 8 ? x : y,
-        v = h < 4 ? y : h == 12 || h == 14 ? x : z;
-        return ((h & 1) === 0 ? u : -u) + ((h & 2) === 0 ? v : -v);
-    }
-
-    function scale(n) { return (1 + n) / 2; }
-
-    var p = new Array(512);
-
-    for (var i = 0; i < 256; i++)
-        p[256 + i] = p[i] = this.randomInts[i];
-
-    var X = Math.floor(x) & 255,
-        Y = Math.floor(y) & 255,
-        Z = Math.floor(z) & 255;
-        x -= Math.floor(x);
-        y -= Math.floor(y);
-        z -= Math.floor(z);
-
-    var u = fade(x),
-        v = fade(y),
-        w = fade(z);
-
-    var A = p[X] + Y,
-        AA = p[A] + Z,
-        AB = p[A + 1] + Z,
-        B = p[X + 1] + Y,
-        BA = p[B] + Z,
-        BB = p[B + 1] + Z;
-
-    return scale(lerp(w, lerp(v, lerp(u, grad(p[AA], x, y, z),
-                 grad(p[BA], x - 1, y, z)),
-                 lerp(u, grad(p[AB], x, y - 1, z),
-                 grad(p[BB], x - 1, y - 1, z))),
-                 lerp(v, lerp(u, grad(p[AA + 1], x, y, z - 1),
-                 grad(p[BA + 1], x - 1, y, z - 1)),
-                 lerp(u, grad(p[AB + 1], x, y - 1, z - 1),
-                 grad(p[BB + 1], x - 1, y - 1, z - 1)))));
-};
-
 // Map value
 function map(x, inMin, inMax, outMin, outMax) {
 
@@ -311,7 +252,7 @@ function draw(ctx) {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    points = getPoints(cellSize * ppx, variation * ppx, border * ppx, ctx);
+    points = getPoints(cellSize * imageScale, variation * imageScale, border * imageScale, ctx);
     drawImage(ctx);
 }
 
@@ -342,35 +283,38 @@ function drawImage(ctx) {
         var normalizedY = map(y, 0, ctx.canvas.height, 0, 1);
 
         var scale = chroma.scale(convertedColors).mode("hcl");
-        var color;
+        var colorIndex;
 
-        if (colorMode === 0) {
+        if (colorMode == 0) {
 
-            color = chroma.interpolate(scale(normalizedX + (getRandomInt(0, 1) / (100 - colorVariation))),
-                                       scale(normalizedY + (getRandomInt(0, 1) / (100 - colorVariation))),
-                                       0.5).rgb();
+            colorIndex = Math.hypot(normalizedX - 0.5, normalizedY - 0.5);
 
         } else if (colorMode == 1) {
 
-            color = scale(((normalizedX + normalizedY) / 2) + (getRandomInt(0, 1) / (100 - colorVariation))).rgb();
+            colorIndex = ((normalizedX + normalizedY) / 2);
 
         } else if (colorMode == 2) {
 
-            color = scale(normalizedX + (getRandomInt(0, 1) / (100 - colorVariation))).rgb();
+            colorIndex = ((1 - normalizedX + normalizedY) / 2);
 
         } else if (colorMode == 3) {
 
-            color = scale(normalizedY + (getRandomInt(0, 1) / (100 - colorVariation))).rgb();
+            colorIndex = normalizedX;
 
         } else if (colorMode == 4) {
 
-            color = scale(map(PerlinNoise.noise(normalizedX * noiseScaleX, normalizedY * noiseScaleY, 0) + (getRandomInt(0, 1) / (100 - colorVariation)),0.1, 0.9, 0, 1)).rgb();
+            colorIndex = normalizedY;
 
         } else if (colorMode == 5) {
 
+            colorIndex = map(PerlinNoise.noise(normalizedX * noiseScaleX, normalizedY * noiseScaleY, 0), 0.0, 1.0, 0, 1);
 
+        } else if (colorMode == 6) {
 
+            colorIndex = Math.hypot(normalizedX - 0.5, normalizedY - 1.5) - 0.5;
         }
+
+        color = scale(colorIndex + (getRandomInt(0, 1) / (100 - colorVariation))).rgb();
 
         ctx.fillRGB(color[0], color[1], color[2]);
         ctx.strokeRGB(color[0], color[1], color[2]);
@@ -386,9 +330,7 @@ function getPoints(cellSize, randomness, border, ctx) {
     var points = [];
 
     for (var x = -border; x < ctx.canvas.width + border + cellSize; x += cellSize) {
-
         for (var y = -border; y < ctx.canvas.height + border + cellSize; y += cellSize) {
-
             points.push([x + getRandomInt(-randomness * cellSize, randomness * cellSize),
                          y + getRandomInt(-randomness * cellSize, randomness * cellSize)]);
         }
@@ -398,18 +340,13 @@ function getPoints(cellSize, randomness, border, ctx) {
 }
 
 $("#cell-size").on("change", function() {
-
     cellSize = this.value;
-
     border = Math.round(0.2 * cellSize);
-
     draw(c);
 });
 
 $("#variation").on("change", function() {
-
     variation = this.value;
-
     draw(c);
 });
 
@@ -417,44 +354,35 @@ $("#select-color-mode").on("change", function() {
 
     colorMode = this.value;
 
-    if (colorMode == 4) {
-
-        $("#noise-controls").show();
-
-    } else {
-
-        $("#noise-controls").hide();
-    }
-
-    draw(c);
-});
-
-$("#noise-scale-x").on("change mousemove touchmove", function() {
-
-    noiseScaleX = this.value;
-
-    draw(c);
-});
-
-$("#noise-scale-y").on("change mousemove touchmove", function() {
-
-    noiseScaleY = this.value;
-
-    draw(c);
-});
-
-$("#color-variation").on("change mousemove touchmove", function() {
-
-    colorVariation = this.value;
+    if (colorMode == 4) $("#noise-controls").show();
+    else $("#noise-controls").hide();
 
     drawImage(c);
 });
 
-$("#select-colors").on("change", function() {
+$("#noise-scale-x").on("change mousemove touchmove", function() {
+    noiseScaleX = this.value;
+    drawImage(c);
+});
 
+$("#noise-scale-y").on("change mousemove touchmove", function() {
+    noiseScaleY = this.value;
+    drawImage(c);
+});
+
+$("#noise-randomize").click(function() {
+    PerlinNoise.generate();
+    drawImage(c);
+});
+
+$("#color-variation").on("change mousemove touchmove", function() {
+    colorVariation = this.value;
+    drawImage(c);
+});
+
+$("#select-colors").on("change", function() {
     paletteSize = this.value;
     updateControls();
-
     draw(c);
 });
 
@@ -467,7 +395,6 @@ function updateControls() {
             $("#color-" + i).show();
 
             for (var j = 0; j < colorControls.length; j++) {
-
                 $("#" + colorControls[j] + "-" + i).val(colors[i][j]);
             }
 
@@ -489,53 +416,12 @@ $("#select-resolution").on("change", function(){
 
         setAutomaticResolution();
 
-    } else if (this.value == 1) {
+    } else {
 
-        setResolution(1024, 768);
-
-    } else if (this.value == 2) {
-
-        setResolution(1280, 800);
-
-    } else if (this.value == 3) {
-
-        setResolution(1366, 768);
-
-    } else if (this.value == 4) {
-
-        setResolution(1680, 1050);
-
-    } else if (this.value == 5) {
-
-        setResolution(1920, 1080);
-
-    } else if (this.value == 6) {
-
-        setResolution(1920, 1200);
-
-    } else if (this.value == 7) {
-
-        setResolution(2560, 1440);
-
-    } else if (this.value == 8) {
-
-        setResolution(2560, 1600);
-
-    } else if (this.value == 9) {
-
-        setResolution(3840, 2160);
-
-    } else if (this.value == 10) {
-
-        setIOSResolution();
-
-    } else if (this.value == 11) {
-
-        setAndroidLargeResolution();
-
-    } else if (this.value == 12) {
-
-        setAndroidSmallResolution();
+        scaleFactor = +this.value.split("s")[1];
+        if (scaleFactor > 0) imageScale = scaleFactor;
+        rc.canvas.width = +this.value.split("s")[0].split("x")[0];
+        rc.canvas.height = +this.value.split("s")[0].split("x")[1];
     }
 });
 
@@ -543,64 +429,34 @@ function setAutomaticResolution() {
 
     if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
 
-        setIOSResolution();
+        imageScale = 2;
+        rc.canvas.width = 2732;
+        rc.canvas.height = 2732;
 
     } else if (/Android/i.test(navigator.userAgent)) {
 
-        if (height >= 1280) {
-
-            setAndroidLargeResolution();
-
-        } else {
-
-            setAndroidSmallResolution();
-        }
+        imageScale = 2;
+        rc.canvas.width = 2920;
+        rc.canvas.height = 2560;
 
     } else {
 
-        rc.canvas.width = window.screen.width;
-        rc.canvas.height = window.screen.height;
+        if (window.screen.width > 2560 || window.screen.height > 1600) {
 
-        $("#automatic-size").html("Wallpaper will be saved for your device (" + window.screen.width + "x" + window.screen.height + " pixels).");
+            rc.canvas.width = 3840;
+            rc.canvas.height = 2160;
+
+        } else if (window.screen.width > 1920 || window.screen.height > 1200) {
+
+            rc.canvas.width = 2560;
+            rc.canvas.height = 1600;
+
+        } else {
+
+            rc.canvas.width = 1920;
+            rc.canvas.height = 1200;
+        }
     }
-}
-
-function setIOSResolution() {
-
-    ppx = 2;
-
-    rc.canvas.width = 2732;
-    rc.canvas.height = 2732;
-
-    $("#automatic-size").html("Wallpaper will be saved for iPad/iPhone (2732x2732 pixels).");
-}
-
-function setAndroidLargeResolution() {
-
-    ppx = 2;
-
-    rc.canvas.width = 2920;
-    rc.canvas.height = 2560;
-
-    $("#automatic-size").html("Wallpaper will be saved for large Android devices (2920x2560 pixels).");
-}
-
-function setAndroidSmallResolution() {
-
-    ppx = 2;
-
-    rc.canvas.width = 1460;
-    rc.canvas.height = 1280;
-
-    $("#automatic-size").html("Wallpaper will be saved for small Android devices (1460x1280 pixels).");
-}
-
-function setResolution(w, h) {
-
-    rc.canvas.width = w;
-    rc.canvas.height = h;
-
-    $("#automatic-size").html("Wallpaper will be saved at a resolution of " + w + "x" + h + " pixels.");
 }
 
 $("#final-save-button").click(function(){
@@ -614,6 +470,11 @@ $("#final-save-button").click(function(){
     $("#final-save-button").attr("download", "wallpaper.jpg");
 });
 
+$(".modal-close-button").click(function(event) {
+
+    $(event.target).parent().parent().parent().fadeToggle(200);
+});
+
 // Start here
 // Get canvas 2d context to draw on
 var c = document.getElementById("canvas").getContext("2d");
@@ -621,11 +482,12 @@ var rc = document.getElementById("renderCanvas").getContext("2d"); // Rendering 
 
 var width, height;
 
-var dppx = +window.devicePixelRatio || Math.sqrt(screen.deviceXDPI * screen.deviceYDPI) / 96 || 1;
-var ppx = dppx;
+// Device pixel ratio
+var devicePixelRatio = +window.devicePixelRatio || (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) ? 2 : 1;
+var imageScale = devicePixelRatio;
 
-var cellSize = 30;
-var variation = 0.2;
+var cellSize = 35;
+var variation = 0.075;
 var colorMode = 1;
 var noiseScaleX = 1;
 var noiseScaleY = 1;
@@ -635,25 +497,7 @@ var points;
 var colorControls = ["hue", "saturation", "lightness"];
 var paletteSize = 2;
 var maxPaletteSize = 5;
-var colors = [];
-
-colors.push(chroma("#efee69").hsl());
-colors.push(chroma("#21313e").hsl());
-colors.push(chroma("#212121").hsl());
-colors.push(chroma("#212121").hsl());
-colors.push(chroma("#212121").hsl());
-
-for (var i = 0; i < maxPaletteSize; i++) {
-
-    for (var j = 0; j < colorControls.length; j++) {
-
-        var eventFunction = new Function("colors[" + i + "][" + j + "] = parseFloat(this.value);drawImage(c);");
-
-        $("#" + colorControls[j] + "-" + i).on("change mousemove touchmove", eventFunction);
-    }
-}
-
-updateControls();
+var colors = [chroma("#efee69").hsl(), chroma("#21313e").hsl(), chroma("#212121").hsl(), chroma("#212121").hsl(), chroma("#212121").hsl()];
 
 window.onload = function() {
 
@@ -665,6 +509,14 @@ window.onload = function() {
     c.canvas.height = height;
 
     // Setup
+    for (var i = 0; i < maxPaletteSize; i++) {
+        for (var j = 0; j < colorControls.length; j++) {
+            var eventFunction = new Function("colors[" + i + "][" + j + "] = parseFloat(this.value);drawImage(c);");
+            $("#" + colorControls[j] + "-" + i).on("change mousemove touchmove", eventFunction);
+        }
+    }
+
+    updateControls();
     setAutomaticResolution();
 
     // Draw image
