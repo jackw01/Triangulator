@@ -312,6 +312,11 @@ function drawImage(ctx) {
         } else if (colorMode == 6) {
 
             colorIndex = Math.hypot(normalizedX - 0.5, normalizedY - 1.5) - 0.5;
+
+        }  else if (colorMode == 7) {
+
+            colorIndex = Math.abs(normalizedY - 0.5) * 2;
+
         }
 
         color = scale(colorIndex + (getRandomInt(0, 1) / (100 - colorVariation))).rgb();
@@ -440,6 +445,21 @@ function setAutomaticResolution() {
         rc.canvas.height = 2560;
 
     } else {
+
+        if (window.screen.width / window.screen.height > 1.9) {
+
+            if (window.screen.width > 2560) {
+
+                rc.canvas.width = 3440;
+                rc.canvas.height = 1440;
+
+            } else {
+
+                rc.canvas.width = 2560;
+                rc.canvas.height = 1080;
+            }
+
+        }
 
         if (window.screen.width > 2560 || window.screen.height > 1600) {
 
