@@ -230,14 +230,13 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// Average points
-function averagePoints(points) {
+// Finds the centroid of a group of points
+function centroid(points) {
 
     var sumX = 0;
     var sumY = 0;
 
     for (var i = 0; i < points.length; i++) {
-
         sumX += points[i][0];
         sumY += points[i][1];
     }
@@ -252,15 +251,26 @@ function draw(ctx) {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    points = getPoints(cellSize * imageScale, variation * imageScale, border * imageScale, ctx);
+    points = []
+
+    // Calculate points to make triangles from
+    for (var x = -border * imageScale; x < ctx.canvas.width + border * imageScale + cellSize * imageScale; x += cellSize * imageScale) {
+        for (var y = -border * imageScale; y < ctx.canvas.height + border * imageScale + cellSize * imageScale; y += cellSize * imageScale) {
+            points.push([x + getRandomInt(-variation * imageScale * cellSize * imageScale, variation * imageScale * cellSize * imageScale),
+                         y + getRandomInt(-variation * imageScale * cellSize * imageScale, variation * imageScale * cellSize * imageScale)]);
+        }
+    }
+
     drawImage(ctx);
 }
 
 // Draw the image
 function drawImage(ctx) {
 
+    // Get triangles
     triangles = triangulate(points, false);
 
+    // Convert hsl values to chroma.js scale
     var convertedColors = [];
 
     for (var i = 0; i < paletteSize; i++) {
@@ -268,21 +278,26 @@ function drawImage(ctx) {
         convertedColors.push(chroma.hsl(colors[i][0], colors[i][1], colors[i][2]));
     }
 
+    var scale = chroma.scale(convertedColors).mode("hcl");
+
+    // Loop through triangles
     for (var i = 0; i < triangles.length; i += 3) {
 
+        // Make path
         ctx.beginPath();
         ctx.moveTo(points[triangles[i]][0], points[triangles[i]][1]);
         ctx.lineTo(points[triangles[i + 1]][0], points[triangles[i + 1]][1]);
         ctx.lineTo(points[triangles[i + 2]][0], points[triangles[i + 2]][1]);
 
-        var triangleCenter = averagePoints([points[triangles[i]], points[triangles[i + 1]], points[triangles[i + 2]]]);
+        // Find where the triangle's centroid lies on the gradient
+        var triangleCenter = centroid([points[triangles[i]], points[triangles[i + 1]], points[triangles[i + 2]]]);
 
         var x = triangleCenter[0];
         var y = triangleCenter[1];
         var normalizedX = map(x, 0, ctx.canvas.width, 0, 1);
         var normalizedY = map(y, 0, ctx.canvas.height, 0, 1);
 
-        var scale = chroma.scale(convertedColors).mode("hcl");
+        // Determine scale index
         var colorIndex;
 
         if (colorMode == 0) {
@@ -307,7 +322,7 @@ function drawImage(ctx) {
 
         } else if (colorMode == 5) {
 
-            colorIndex = map(PerlinNoise.noise(normalizedX * noiseScaleX, normalizedY * noiseScaleY, 0), 0.0, 1.0, 0, 1);
+            colorIndex = PerlinNoise.noise(normalizedX * noiseScaleX, normalizedY * noiseScaleY, 0);
 
         } else if (colorMode == 6) {
 
@@ -319,8 +334,10 @@ function drawImage(ctx) {
 
         }
 
+        // Get color of triangle
         color = scale(colorIndex + (getRandomInt(0, 1) / (100 - colorVariation))).rgb();
 
+        // Draw triangle
         ctx.fillRGB(color[0], color[1], color[2]);
         ctx.strokeRGB(color[0], color[1], color[2]);
         ctx.lineWidth = 1.5;
@@ -329,20 +346,7 @@ function drawImage(ctx) {
     }
 }
 
-// Get points
-function getPoints(cellSize, randomness, border, ctx) {
-
-    var points = [];
-
-    for (var x = -border; x < ctx.canvas.width + border + cellSize; x += cellSize) {
-        for (var y = -border; y < ctx.canvas.height + border + cellSize; y += cellSize) {
-            points.push([x + getRandomInt(-randomness * cellSize, randomness * cellSize),
-                         y + getRandomInt(-randomness * cellSize, randomness * cellSize)]);
-        }
-    }
-
-    return points;
-}
+// Update variables when controls are changed
 
 $("#cell-size").on("change", function() {
     cellSize = this.value;
@@ -391,30 +395,28 @@ $("#select-colors").on("change", function() {
     draw(c);
 });
 
+// Change color inputs when palette size is changed
 function updateControls() {
 
     for (var i = 0; i < maxPaletteSize; i++) {
-
         if (i < paletteSize) {
-
             $("#color-" + i).show();
-
             for (var j = 0; j < colorControls.length; j++) {
                 $("#" + colorControls[j] + "-" + i).val(colors[i][j]);
             }
-
         } else {
-
             $("#color-" + i).hide();
         }
     }
 }
 
+// Show save modal
 $("#save-button").click(function(){
 
     $("#save-modal-container").fadeToggle(200);
 });
 
+// Change resolution
 $("#select-resolution").on("change", function(){
 
     if (this.value === 0) {
@@ -430,55 +432,50 @@ $("#select-resolution").on("change", function(){
     }
 });
 
+// Automatically determine resolution
 function setAutomaticResolution() {
 
+    // Quick and dirty check for iOS (needs scale factor = 2)
     if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-
         imageScale = 2;
         rc.canvas.width = 2732;
         rc.canvas.height = 2732;
 
+    // Same for Android
     } else if (/Android/i.test(navigator.userAgent)) {
-
         imageScale = 2;
         rc.canvas.width = 2920;
         rc.canvas.height = 2560;
 
     } else {
 
+        // Ultrawide? Use 3440x1440 or 2560x1080
         if (window.screen.width / window.screen.height > 1.9) {
-
             if (window.screen.width > 2560) {
-
                 rc.canvas.width = 3440;
                 rc.canvas.height = 1440;
-
             } else {
-
                 rc.canvas.width = 2560;
                 rc.canvas.height = 1080;
             }
 
-        }
-
-        if (window.screen.width > 2560 || window.screen.height > 1600) {
-
-            rc.canvas.width = 3840;
-            rc.canvas.height = 2160;
-
-        } else if (window.screen.width > 1920 || window.screen.height > 1200) {
-
-            rc.canvas.width = 2560;
-            rc.canvas.height = 1600;
-
+        // Normal monitors - pick 4K, WQXGA (like 16:10 QHD), or WUXGA (like 16:10 FHD) based on screen size
         } else {
-
-            rc.canvas.width = 1920;
-            rc.canvas.height = 1200;
+            if (window.screen.width > 2560 || window.screen.height > 1600) {
+                rc.canvas.width = 3840;
+                rc.canvas.height = 2160;
+            } else if (window.screen.width > 1920 || window.screen.height > 1200) {
+                rc.canvas.width = 2560;
+                rc.canvas.height = 1600;
+            } else {
+                rc.canvas.width = 1920;
+                rc.canvas.height = 1200;
+            }
         }
     }
 }
 
+// Actually save the wallpaper
 $("#final-save-button").click(function(){
 
     $("#save-modal-container").fadeToggle(200);
@@ -490,6 +487,7 @@ $("#final-save-button").click(function(){
     $("#final-save-button").attr("download", "wallpaper.jpg");
 });
 
+// Close the modal
 $(".modal-close-button").click(function(event) {
 
     $(event.target).parent().parent().parent().fadeToggle(200);
@@ -506,6 +504,7 @@ var width, height;
 var devicePixelRatio = +window.devicePixelRatio || (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) ? 2 : 1;
 var imageScale = devicePixelRatio;
 
+// Initialize variables
 var cellSize = 35;
 var variation = 0.075;
 var colorMode = 1;
