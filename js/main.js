@@ -354,7 +354,7 @@ $("#select-color-mode").on("change", function() {
 
     colorMode = this.value;
 
-    if (colorMode == 4) $("#noise-controls").show();
+    if (colorMode == 5) $("#noise-controls").show();
     else $("#noise-controls").hide();
 
     drawImage(c);
