@@ -302,7 +302,7 @@ function drawImage(ctx) {
 
         if (colorMode == 0) {
 
-            colorIndex = Math.hypot(normalizedX - 0.5, normalizedY - 0.5);
+            colorIndex = Math.hypot(normalizedX - 0.5, normalizedY - 0.5) * Math.sqrt(2) * 1.1;
 
         } else if (colorMode == 1) {
 
@@ -328,10 +328,15 @@ function drawImage(ctx) {
 
             colorIndex = Math.hypot(normalizedX - 0.5, normalizedY - 1.5) - 0.5;
 
-        }  else if (colorMode == 7) {
+        } else if (colorMode == 7) {
 
             colorIndex = Math.abs(normalizedY - 0.5) * 2;
 
+        } else if (colorMode == 8) {
+
+            var distanceFromEdges = Math.min(Math.min(normalizedX - 0, 1 - normalizedX), Math.min(normalizedY - 0, 1 - normalizedY)) * 2;
+            var distanceFromCenter = Math.hypot(normalizedX - 0.5, normalizedY - 0.5) * Math.sqrt(2);
+            colorIndex = ((1 - distanceFromEdges) * (1 - distanceFromEdges)) * 0.3 + (distanceFromCenter) * 0.7;
         }
 
         // Get color of triangle
