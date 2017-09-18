@@ -1,6 +1,7 @@
 /*
 canvasutils.js
 Copyright (C) 2015-2016 jackw01
+This program is distrubuted under the MIT License, see LICENSE for details
 */
 
 // Set fill/stroke
