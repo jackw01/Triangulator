@@ -1,5 +1,5 @@
 /*
-Triangulator
+TriangleMaker
 Copyright (C) 2015-2018 jackw01
 This program is distrubuted under the MIT License, see LICENSE for details
 */

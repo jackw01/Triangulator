@@ -1,4 +1,4 @@
-# Triangulator
+# TriangleMaker
 Procedurally generate triangle art wallpapers for computers and mobile devices
 
 ## Licenses
