@@ -16,20 +16,29 @@
         <link rel="apple-touch-icon" href="img/Apple Home Screen Icon.png">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://jackw01.github.io/css/style.css">
         <link rel="stylesheet" href="css/extra.css">
         <link rel="stylesheet" href="css/normalize.min.css">
         <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-86167050-2"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'UA-86167050-2');
+        </script>
     </head>
-    <body>
+    <body class="body-dark">
         <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an outdated browser. Please <a href="https://www.google.com/chrome/browser/desktop/index.html">download Google Chrome</a> to improve your experience.</p>
         <![endif]-->
         <div class="modal-container" id="save-modal-container" style="display:none">
             <div class="modal">
                 <div class="modal-header">
-                        <h3 class="modal-title">Save Wallpaper</h3>
-                        <a class="modal-close-button dark-button">&#10005;</a>
+                        <span class="modal-title">Save Wallpaper</span>
+                        <a class="modal-close-button">&#10005;</a>
                 </div>
                 <div class="modal-content">
                     <table class="input-table">
@@ -39,7 +48,7 @@
                                     Resolution:
                                 </td>
                                 <td>
-                                    <span class="select-container dark-button" style="width:216px">
+                                    <span class="select-container button" style="width:216px">
                                         <select style="width:216px" id="select-resolution">
                                             <option value="0">Automatic</option>
                                             <option value="1920x1080s0">1920x1080 (Full HD 1080p)</option>
@@ -59,7 +68,7 @@
                         </tbody>
                     </table>
                     <br>
-                    <a class="button button-rect dark-button" id="final-save-button">Save</a>
+                    <a class="button button-rect button" id="final-save-button">Save</a>
                 </div>
             </div>
         </div>
@@ -72,7 +81,7 @@
                         <span class="label">Tile size </span>
                     </td>
                     <td>
-                        <span class="slider-container"><input type="range" style="width:216px" min="25" max="150" step="1" value="35" class="dark-slider" id="cell-size"></span>
+                        <span class="slider-container"><input type="range" style="width:216px" min="25" max="150" step="1" value="35" class="slider" id="cell-size"></span>
                     </td>
                 </tr>
                 <tr>
@@ -80,7 +89,7 @@
                         <span class="label">Tile variation </span>
                     </td>
                     <td>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="0.2" step="0.01" value="0.075" class="dark-slider" id="variation"></span>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="0.2" step="0.01" value="0.075" class="slider" id="variation"></span>
                     </td>
                 </tr>
                 <tr>
@@ -88,7 +97,7 @@
                         <span class="label">Gradient mode </span>
                     </td>
                     <td>
-                        <span class="select-container dark-button" style="width:200px">
+                        <span class="select-container button" style="width:200px">
                             <select style="width:200px" id="select-color-mode">
                                 <option value="1">Interpolate X/Y</option>
                                 <option value="2">Interpolate -X/Y</option>
@@ -109,7 +118,7 @@
                             <span class="label">X scale </span>
                         </td>
                         <td>
-                            <span class="slider-container"><input type="range" style="width:216px" min="0.01" max="5" step="0.01" value="1" class="dark-slider" id="noise-scale-x"></span>
+                            <span class="slider-container"><input type="range" style="width:216px" min="0.01" max="5" step="0.01" value="1" class="slider" id="noise-scale-x"></span>
                         </td>
                     </tr>
                     <tr>
@@ -117,14 +126,14 @@
                             <span class="label">Y scale </span>
                         </td>
                         <td>
-                            <span class="slider-container"><input type="range" style="width:216px" min="0.01" max="5" step="0.01" value="1" class="dark-slider" id="noise-scale-y"></span>
+                            <span class="slider-container"><input type="range" style="width:216px" min="0.01" max="5" step="0.01" value="1" class="slider" id="noise-scale-y"></span>
                         </td>
                     </tr>
                     <tr>
                         <td>
                         </td>
                         <td>
-                            <a class="button button-rect button-rect-small dark-button" id="noise-randomize">Randomize</a>
+                            <a class="button button-rect button-rect-small button" id="noise-randomize">Randomize</a>
                         </td>
                     </tr>
                 </tbody>
@@ -133,7 +142,7 @@
                         <span class="label">Color variation </span>
                     </td>
                     <td>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="90" step="1" value="20" class="dark-slider" id="color-variation"></span>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="90" step="1" value="20" class="slider" id="color-variation"></span>
                     </td>
                 </tr>
                 <tr>
@@ -141,7 +150,7 @@
                         <span class="label">Colors </span>
                     </td>
                     <td>
-                        <span class="select-container dark-button" style="width:200px">
+                        <span class="select-container button" style="width:200px">
                             <select style="width:200px" id="select-colors">
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -156,9 +165,9 @@
                         <span class="label">Color 1 </span>
                     </td>
                     <td>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="59" class="dark-slider slider-hue" id="hue-0"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-lightness" id="lightness-0"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-saturation" id="saturation-0"></span>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="59" class="slider slider-hue" id="hue-0"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-lightness" id="lightness-0"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-saturation" id="saturation-0"></span>
                     </td>
                 </tr>
                 <tr id="color-1">
@@ -166,9 +175,9 @@
                         <span class="label">Color 2 </span>
                     </td>
                     <td>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="59" class="dark-slider slider-hue" id="hue-1"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-lightness" id="lightness-1"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-saturation" id="saturation-1"></span>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="59" class="slider slider-hue" id="hue-1"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-lightness" id="lightness-1"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-saturation" id="saturation-1"></span>
                     </td>
                 </tr>
                 <tr id="color-2">
@@ -176,9 +185,9 @@
                         <span class="label">Color 3 </span>
                     </td>
                     <td>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="206" class="dark-slider slider-hue" id="hue-2"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-lightness" id="lightness-2"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-saturation" id="saturation-2"></span>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="206" class="slider slider-hue" id="hue-2"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-lightness" id="lightness-2"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-saturation" id="saturation-2"></span>
                     </td>
                 </tr>
                 <tr id="color-3">
@@ -186,9 +195,9 @@
                         <span class="label">Color 4 </span>
                     </td>
                     <td>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="206" class="dark-slider slider-hue" id="hue-3"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-lightness" id="lightness-3"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-saturation" id="saturation-3"></span>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="206" class="slider slider-hue" id="hue-3"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-lightness" id="lightness-3"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-saturation" id="saturation-3"></span>
                     </td>
                 </tr>
                 <tr id="color-4">
@@ -196,15 +205,15 @@
                         <span class="label">Color 5 </span>
                     </td>
                     <td>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="206" class="dark-slider slider-hue" id="hue-4"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-lightness" id="lightness-4"></span><br>
-                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="dark-slider slider-saturation" id="saturation-4"></span>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="360" step="1" value="206" class="slider slider-hue" id="hue-4"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-lightness" id="lightness-4"></span><br>
+                        <span class="slider-container"><input type="range" style="width:216px" min="0" max="1" step="0.01" value="1" class="slider slider-saturation" id="saturation-4"></span>
                     </td>
                 </tr>
             </table>
             <br>
             <!--<a class="button button-rect" style="margin-right:0.9em" id="randomize-button">Randomize Colors</a>-->
-            <a class="button button-rect dark-button" id="save-button">Save Wallpaper...</a>
+            <a class="button button-rect button" id="save-button">Save Wallpaper...</a>
         </div>
         <div class="infotext">
             © 2017 <a href="http://github.com/jackw01">jackw01</a><br>
